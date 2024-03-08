@@ -2,11 +2,14 @@ package com.test;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.File;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.core.BaseTest;
+import com.core.SpreedSheetData;
 import com.page.DetailPage;
 import com.page.MainPage;
 
@@ -34,7 +37,23 @@ public class SearchCountriesTest extends BaseTest {
 			{ "India", "India" }, 
 			{ "Brazil", "Brazil" }, 
 			{ "Argentina", "Argentina" },
-			{ "Italy", "Italy" }
+			{ "Italy", "Italia" }
 		};	
-	}		
+	}
+	
+	@Test(dataProvider = "countriesExcel")
+	public void testSearchCountriesExcel(String searchCountry, String expectedCountry) {				
+		detailPage = mainPage.searchCountry(searchCountry);
+		assertEquals(detailPage.getTitleCountry(), expectedCountry);		
+	}
+	
+	@DataProvider(name = "countriesExcel")
+	public Object[][] dataProviderCountriesExcel(){
+		Object[][] testData = SpreedSheetData.readExcelData("Paises"
+				, "src" + File.separator + "test" + File.separator + "resources" + File.separator+ "paises.xls"
+				, "Dados");
+		return testData;
+	}
+	
+	
 }
